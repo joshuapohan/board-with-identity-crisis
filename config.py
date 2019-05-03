@@ -1,4 +1,6 @@
+import os
 import json
+import urlparse
 
 class Config:
     """
@@ -49,6 +51,20 @@ class Config:
     def load_config_from_path(cls, config_path="./config.json"):
         cls._set_config_path(config_path)
         cls._load_config()
+    
+    @classmethod
+    def load_config(cls):
+        if os.environ.get['DATABASE_URL']:
+            db_cred = urlparse.urlparse(os.environ.get['DATABASE_URL'])
+            cls._db_type = 2
+            cls._db_url = os.environ.get['DATABASE_URL']
+            cls._user = db_cred.username
+            cls._password = db_cred.password
+            cls._host = db_cred.hostname
+            cls._port = db_cred.port
+            cls._database = db_cred.path[1:]        
+        else:
+            cls.load_config_from_path()
 
     @classmethod
     def set_db_url(cls, db_url):
@@ -86,4 +102,3 @@ class Config:
     def get_db_database(cls):
         return cls._database
     
-
