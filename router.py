@@ -10,7 +10,8 @@ def set_cors_header(response):
 
 @app.route('/')
 def index():
-    return send_from_directory('static','index.html')
+    return "Hello Word"
+    #return send_from_directory('static','index.html')
 
 @app.route('/session/<session_id>', methods=['GET'])
 def get_session(session_id):
