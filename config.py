@@ -1,6 +1,6 @@
 import os
 import json
-import urlparse
+from urllib.parse import urlparse
 
 class Config:
     """
@@ -54,10 +54,10 @@ class Config:
     
     @classmethod
     def load_config(cls):
-        if os.environ.get['DATABASE_URL']:
-            db_cred = urlparse.urlparse(os.environ.get['DATABASE_URL'])
+        if os.environ.get('DATABASE_URL'):
+            db_cred = urlparse(os.environ.get('DATABASE_URL'))
             cls._db_type = 2
-            cls._db_url = os.environ.get['DATABASE_URL']
+            cls._db_url = os.environ.get('DATABASE_URL')
             cls._user = db_cred.username
             cls._password = db_cred.password
             cls._host = db_cred.hostname

@@ -92,5 +92,4 @@ def update_container():
 # Custom static data
 @app.route('/<path:filename>')
 def custom_static(filename):
-    print("static directory")
     return send_from_directory('/client/client-board/build', 'index.html')
