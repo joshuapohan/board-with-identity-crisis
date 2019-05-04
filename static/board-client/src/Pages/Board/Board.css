@@ -1,0 +1,40 @@
+body{
+    background-color: #223052
+}
+.ColorPickerStyle{
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    margin: 5px;
+    border: 2px solid;
+}
+.main_buttons{
+     border: none;
+     color: white;
+     padding: 15px 20px;
+     text-align: center;
+     text-decoration: none;
+     display: inline-block;
+     font-size: 16px;
+     border-radius: 5px;
+     margin: 5px;
+     cursor: pointer;
+}
+.main_buttons_color_1{
+     background-color: #2a6171;
+}
+.main_buttons_color_2{
+     background-color: #f34573;        
+}
+.save_buttons{
+     border: none;
+     color: white;
+     text-align: center;
+     text-decoration: none;
+     display: inline-block;
+     font-size: 12px;
+     border-radius: 5px;
+     margin: 5px;
+     cursor: pointer;
+     background-color: #00d1cd;
+}

@@ -1,2 +1,2 @@
-release: python create_tables.py
+release: ./release_script.sh
 web: gunicorn app:app
