@@ -2,7 +2,8 @@ import os, sys
 from flask import Flask
 from config import Config
 
-app = Flask(__name__)
+basedir = os.path.abspath(os.path.dirname(__file__))
+app = Flask(__name__,static_folder=os.path.join(basedir,'static'))
 Config.load_config()
 
 import router
