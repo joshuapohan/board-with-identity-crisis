@@ -280,3 +280,8 @@ class ConfigTask:
     def save(self):
         """ Save the instance to the database, using the mapper class"""
         ConfigTaskMapper.save(self)
+
+class User():
+
+    def __init__(self,name,password):
+        self.name = name

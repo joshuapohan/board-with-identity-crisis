@@ -1,6 +1,6 @@
 import os
 import json
-from flask import make_response, request, send_from_directory
+from flask import make_response, request, send_from_directory, url_for
 from app import app
 from model.models import TasksContainer, Task, ConfigTask
 
@@ -11,7 +11,8 @@ def set_cors_header(response):
 
 @app.route('/')
 def index():
-    return send_from_directory(os.path.join('.', 'static'), 'index.html')
+    return str(url_for('.static', filename='index.html'))
+    #return send_from_directory(os.path.join('.', 'static'), 'index.html')
 
 @app.route('/session/<session_id>', methods=['GET'])
 def get_session(session_id):
