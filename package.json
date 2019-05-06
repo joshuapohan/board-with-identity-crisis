@@ -2,6 +2,6 @@
   "name": "foobar-app",
   "version": "0.1.0",
   "scripts": {
-    "postinstall": "npm install --prefix ./static/board-client"
+    "postinstall": "npm install --prefix ./static/board-client && npm run build --prefix ./static/board-client" 
   }
 }
