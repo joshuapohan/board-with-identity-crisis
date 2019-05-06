@@ -11,9 +11,9 @@ def set_cors_header(response):
 
 @app.route('/')
 def index():
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    return str(os.path.join(basedir,'static'))
-    #return send_from_directory(os.path.join('.', 'static'), 'index.html')
+    #basedir = os.path.abspath(os.path.dirname(__file__))
+    #return str(os.path.join(basedir,'static'))
+    return send_from_directory(os.path.join('.', 'static'), 'index.html')
 
 @app.route('/session/<session_id>', methods=['GET'])
 def get_session(session_id):
