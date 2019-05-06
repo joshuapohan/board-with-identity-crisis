@@ -13,7 +13,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "heroku-postbuild": "cd ../.. && bash ./release_script.sh",
+    "heroku-postbuild": "cd ../.. && bash ./release_script.sh"
   },
   "eslintConfig": {
     "extends": "react-app"
