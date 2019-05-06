@@ -640,3 +640,60 @@ class ConfigTaskMapper:
         connection.close()
 
         return cfg_rows
+
+class UserMapper:
+
+class TasksContainerMapper:
+    """ Mapper for task container, maps the class instance to a database """
+
+    @classmethod
+    def save(cls, user):
+        """ Saves the task container to a database,based on the path provided by Config 
+        Args:
+            task_container (TasksContainer) : the container instance to be saved to db 
+        """
+        db_type = Config.get_db_type()
+        if db_type == 0:
+            pass
+        elif db_type == 1:
+            cls.sqlite_save(task_container)
+        elif db_type == 2:
+            cls.postgres_save(task_container)
+
+    @classmethod
+    def delete_by_id(cls, _id):
+        """ Deletes the task container in the database by id 
+        Args:
+            _id (int) : the id of the container to delete 
+        """
+        db_type = Config.get_db_type()
+        if db_type == 0:
+            pass
+        elif db_type == 1:
+            cls.sqlite_delete_by_id(_id)
+        elif db_type == 2:
+            cls.postgres_delete_by_id(_id)
+
+    @classmethod
+    def get_row_by_id(cls, _id):
+        pass
+
+    @classmethod
+    def get_all_rows(cls):
+        pass
+
+    @classmethod
+    def postgres_save(cls, user)
+        pass
+
+    @classmethod
+    def postgres_delete_by_id(cls, id):
+        pass
+
+    @classmethod
+    def sqlite_save(cls, user):
+        pass
+
+    @classmethod
+    def sqlite_delete_by_id(cls, id):
+        pass

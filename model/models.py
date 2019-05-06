@@ -283,5 +283,9 @@ class ConfigTask:
 
 class User():
 
-    def __init__(self,name,password):
+    def __init__(self, name, password):
         self.name = name
+        self.password = password
+
+    def save(self):
+        UserMapper.save(self)
