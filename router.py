@@ -1,3 +1,4 @@
+import os
 import json
 from flask import make_response, request, send_from_directory
 from app import app
@@ -10,8 +11,7 @@ def set_cors_header(response):
 
 @app.route('/')
 def index():
-    return("Hello Test")
-    #return send_from_directory('static','index.html')
+    return send_from_directory(os.path.join('.', 'static'), 'index.html')
 
 @app.route('/session/<session_id>', methods=['GET'])
 def get_session(session_id):
