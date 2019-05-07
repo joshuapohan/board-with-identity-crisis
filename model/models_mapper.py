@@ -642,8 +642,6 @@ class ConfigTaskMapper:
         return cfg_rows
 
 class UserMapper:
-
-class TasksContainerMapper:
     """ Mapper for task container, maps the class instance to a database """
 
     @classmethod
@@ -656,9 +654,9 @@ class TasksContainerMapper:
         if db_type == 0:
             pass
         elif db_type == 1:
-            cls.sqlite_save(task_container)
+            cls.sqlite_save(user)
         elif db_type == 2:
-            cls.postgres_save(task_container)
+            cls.postgres_save(user)
 
     @classmethod
     def delete_by_id(cls, _id):
@@ -683,8 +681,34 @@ class TasksContainerMapper:
         pass
 
     @classmethod
-    def postgres_save(cls, user)
-        pass
+    def postgres_save(cls, user):
+        connection = get_postgres_connection()
+        cursor = connection.cursor()
+        if user._id:
+            # if _id exists then it must have been stored in the db
+            insert_user_stmt = "UPDATE users SET name=%s WHERE id=%s;"
+            cursor.execute(insert_user_stmt, (user._name, user._id,))
+        else:
+            # if no _id then create new
+            insert_user_stmt = "INSERT INTO users VALUES(DEFAULT,%s,%s) RETURNING id;"
+            cursor.execute(insert_user_stmt, (user._name, user._password,))     
+            user._id = cursor.fetchone()[0]
+
+
+        if user._id:
+            pass
+            # Delete all existing relations for this object first
+            delete_relation_stmt = "DELETE FROM user_rel_session WHERE user_id=%s;"
+            cursor.execute(delete_relation_stmt, (user._id,))
+
+            #insert all relations
+            insert_session_relation_stmt = "INSERT INTO user_rel_session VALUES(%s,%s)"
+            for session_id in user.session_ids:
+                cursor.execute(insert_session_relation_stmt, (user._id, session_id))
+            connection.commit()
+
+        cursor.close()
+        connection.close()
 
     @classmethod
     def postgres_delete_by_id(cls, id):

@@ -9,7 +9,8 @@ Todo:
 """
 
 import json
-from .models_mapper import TasksContainerMapper, TaskMapper, ConfigTaskMapper
+from flask_bcrypt import Bcrypt
+from .models_mapper import TasksContainerMapper, TaskMapper, ConfigTaskMapper, UserMapper
 
 class TasksContainer:
     """ Container class to hold list of Task instances
@@ -284,8 +285,11 @@ class ConfigTask:
 class User():
 
     def __init__(self, name, password):
-        self.name = name
-        self.password = password
+        bcrypt = Bcrypt()
+        self._id = None
+        self._name = name
+        self._password = bcrypt.generate_password_hash(password).decode()
+        self.session_ids = []
 
     def save(self):
         UserMapper.save(self)

@@ -1,9 +1,11 @@
-from ..model import TasksContainer, Task, User
+from model.models import TasksContainer, Task, User
+from config import Config
 
 def populateDB():
 	"""
 		For testing and debugging purposes
 	"""
+	Config.load_config()
 	task1 = Task(None,1, "Make full maps", "Map variables and create relations table with foreign keys", None)
 	task1.save()
 	task2 = Task(None,1, "Make coffee", "make coffee and drink it", None)
