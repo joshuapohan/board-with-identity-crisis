@@ -284,12 +284,54 @@ class ConfigTask:
 
 class User():
 
-    def __init__(self, name, password):
-        bcrypt = Bcrypt()
+    def __init__(self, _id, name, password, email, is_validated=False):
+        
         self._id = None
         self._name = name
-        self._password = bcrypt.generate_password_hash(password).decode()
+        self.email = email
+        self.is_validated = is_validated
+        self._password = password
         self.session_ids = []
 
     def save(self):
+        bcrypt = Bcrypt()
+        self._password = bcrypt.generate_password_hash(self._password).decode('utf-8')
         UserMapper.save(self)
+
+    def to_json(self):
+        return json.dumps(
+            {"name": self._name,"is_validated": self.is_validated},
+            sort_keys=True, 
+            indent=4)
+
+    def is_password_valid(self, password):
+        bcrypt = Bcrypt()
+        return bcrypt.check_password_hash(self._password, password)
+
+    @classmethod
+    def get_by_username(cls, username):
+        """ Get user instance by id
+        
+        Args:
+            id: id of the user to retrieve
+
+        """
+        user_instance = None
+
+        user_instance = User(*UserMapper.get_row_by_username(username))      
+
+        return user_instance
+
+    @classmethod
+    def get_by_id(cls, _id):
+        """ Get user instance by id
+        
+        Args:
+            id: id of the user to retrieve
+
+        """
+        user_instance = None
+
+        user_instance = User(*UserMapper.get_row_by_id(_id))      
+
+        return user_instance

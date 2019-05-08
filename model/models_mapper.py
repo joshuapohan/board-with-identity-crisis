@@ -674,7 +674,35 @@ class UserMapper:
 
     @classmethod
     def get_row_by_id(cls, _id):
-        pass
+        """ Retrieve a row from the database where it matches the id
+        Args:
+            _id (int) : the id of the user row to get
+        Returns:
+            tuple: tuple of parameters of the row matching the id
+        """
+        db_type = Config.get_db_type()
+        if db_type == 0:
+            pass
+        elif db_type == 1:
+            return cls.sqlite_get_row_by_id(_id)
+        elif db_type == 2:
+            return cls.postgres_get_row_by_id(_id)
+
+    @classmethod
+    def get_row_by_username(cls, username):
+        """ Retrieve a row from the database where it matches the id
+        Args:
+            _id (int) : the id of the user row to get
+        Returns:
+            tuple: tuple of parameters of the row matching the id
+        """
+        db_type = Config.get_db_type()
+        if db_type == 0:
+            pass
+        elif db_type == 1:
+            return cls.sqlite_get_row_by_username(username)
+        elif db_type == 2:
+            return cls.postgres_get_row_by_username(username)
 
     @classmethod
     def get_all_rows(cls):
@@ -690,8 +718,8 @@ class UserMapper:
             cursor.execute(insert_user_stmt, (user._name, user._id,))
         else:
             # if no _id then create new
-            insert_user_stmt = "INSERT INTO users VALUES(DEFAULT,%s,%s) RETURNING id;"
-            cursor.execute(insert_user_stmt, (user._name, user._password,))     
+            insert_user_stmt = "INSERT INTO users VALUES(DEFAULT,%s,%s,%s,%s) RETURNING id;"
+            cursor.execute(insert_user_stmt, (user._name, user._password, user.email, user.is_validated))     
             user._id = cursor.fetchone()[0]
 
 
@@ -711,11 +739,47 @@ class UserMapper:
         connection.close()
 
     @classmethod
+    def postgres_get_row_by_id(cls, _id):
+        connection = get_postgres_connection()
+        cursor = connection.cursor()
+
+        select_stmt = "SELECT * FROM users WHERE id=%s"
+        cursor.execute(select_stmt, (_id,))
+        user_row  = cursor.fetchone()
+
+        cursor.close()
+        connection.close()
+
+        return user_row
+
+    @classmethod
+    def postgres_get_row_by_username(cls, username):
+        connection = get_postgres_connection()
+        cursor = connection.cursor()
+
+        select_stmt = "SELECT * FROM users WHERE username=%s"
+        cursor.execute(select_stmt, (username,))
+        user_row  = cursor.fetchone()
+
+        cursor.close()
+        connection.close()
+
+        return user_row
+
+    @classmethod
     def postgres_delete_by_id(cls, id):
         pass
 
     @classmethod
     def sqlite_save(cls, user):
+        pass
+
+    @classmethod
+    def sqlite_get_row_by_id(cls, _id):
+        pass
+
+    @classmethod
+    def sqlite_get_row_by_username(cls, username):
         pass
 
     @classmethod

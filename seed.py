@@ -12,10 +12,10 @@ def populateDB():
 	task2.save()
 	task3 = Task(None,1, "Buy present", "buy present for april", None)
 	task3.save()
-	container1 = TasksContainer(None,1, "todo")
+	container1 = TasksContainer(None, 1, "todo")
 	container1.add_task(task2, task3)
 	container1.save()
-	container2 = TasksContainer(None,1, "testing")
+	container2 = TasksContainer(None, 1, "testing")
 	container2.add_task(task1)
 	container2.save()
 	container3 = TasksContainer.get_by_id(container1._id)
@@ -24,7 +24,7 @@ def populateDB():
 	task3.save()
 	container3._name = "Updated name"
 	container3.save()
-	user = User('admin','admin')
+	user = User(None, 'admin','admin','admin@test.com',True)
 	user.save()
     
 populateDB()

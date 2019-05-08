@@ -2,7 +2,7 @@ import os
 import json
 from flask import make_response, request, send_from_directory, url_for
 from app import app
-from model.models import TasksContainer, Task, ConfigTask
+from model.models import TasksContainer, Task, ConfigTask, User
 
 def set_cors_header(response):
     response.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS,PUT,DELETE"
@@ -14,6 +14,22 @@ def index():
     #basedir = os.path.abspath(os.path.dirname(__file__))
     #return str(os.path.join(basedir,'static'))
     return send_from_directory(os.path.join('.', 'static'), 'index.html')
+
+@app.route('/register', methods=['POST'])
+def register():
+    user_ins = json.loads(request.data)
+    new_user = User(None, user_ins["username"], user_ins["password"], user_ins["email"], False)
+    new_user.save()
+    return new_user.to_json()
+
+@app.route('/login', methods=['POST'])
+def login():
+    user_ins = json.loads(request.data)
+    cur_user = User.get_by_username(user_ins["username"])
+    if cur_user.is_password_valid(user_ins["password"]):
+        return cur_user.to_json()
+    else:
+        return json.dumps({"Error Message":"Wrong username/password"})
 
 @app.route('/session/<session_id>', methods=['GET'])
 def get_session(session_id):
