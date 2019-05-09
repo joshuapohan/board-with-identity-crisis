@@ -709,6 +709,26 @@ class UserMapper:
         pass
 
     @classmethod
+    def save_session(cls, session_id):
+        db_type = Config.get_db_type()
+        if db_type == 0:
+            pass
+        elif db_type == 1:
+            cls.sqlite_save_session(session_id)
+        elif db_type == 2:
+            cls.postgres_save_session(session_id)
+
+    @classmethod
+    def get_user_for_session(cls, session_id):
+        db_type = Config.get_db_type()
+        if db_type == 0:
+            pass
+        elif db_type == 1:
+            return cls.sqlite_get_user_for_session(session_id)
+        elif db_type == 2:
+            return cls.postgres_get_user_for_session(session_id)
+
+    @classmethod
     def postgres_save(cls, user):
         connection = get_postgres_connection()
         cursor = connection.cursor()
@@ -767,6 +787,32 @@ class UserMapper:
         return user_row
 
     @classmethod
+    def postgres_save_session(cls, user, session_id):
+        connection = get_postgres_connection()
+        cursor = connection.cursor()
+
+        insert_stmt = "INSERT INTO user_rel_session VALUES(%s,%s)"
+        cursor.execute(insert_stmt, (user._id,session_id))
+        user_row  = cursor.fetchone()
+
+        cursor.close()
+        connection.close()
+
+    @classmethod
+    def postgres_get_user_for_session(cls, session_id):
+        connection = get_postgres_connection()
+        cursor = connection.cursor()
+
+        select_stmt = "SELECT * FROM users AS A INNER JOIN user_rel_session AS B WHERE B.session_id=%s"
+        cursor.execute(select_stmt, (session_id,))
+        user_row  = cursor.fetchone()
+
+        cursor.close()
+        connection.close()
+
+        return user_row
+
+    @classmethod
     def postgres_delete_by_id(cls, id):
         pass
 
@@ -784,4 +830,12 @@ class UserMapper:
 
     @classmethod
     def sqlite_delete_by_id(cls, id):
+        pass
+
+    @classmethod
+    def sqlite_save_session(cls, session_id):
+        pass
+
+    @classmethod
+    def sqlite_get_user_for_session(cls, session_id):
         pass

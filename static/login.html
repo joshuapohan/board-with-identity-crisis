@@ -86,7 +86,7 @@
         }
 
         .main-page{
-            margin-top: 25%;
+            margin-top: 5%;
         }
 
         .logo_div{
@@ -156,7 +156,7 @@
             }
 
             onClickLogin(e){
-                fetch('https://bwic.herokuapp.com/login',{
+                fetch('/login',{
                     method: 'POST',
                     headers: {'Content-Type': 'text/plain'},
                     body: JSON.stringify(
@@ -171,7 +171,7 @@
             onClickRegister(e){
                 if(this.state.isRegisterMode){
                     if(this.state.password === this.state.repeatPW){
-                        fetch('https://bwic.herokuapp.com/register',{
+                        fetch('/register',{
                             method: 'POST',
                             headers: {'Content-Type': 'text/plain'},
                             body: JSON.stringify({

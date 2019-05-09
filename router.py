@@ -33,13 +33,50 @@ def login():
     else:
         return json.dumps({"Error Message":"Wrong username/password"})
 
+@app.route('/login',  methods=['GET'])
+def login_page():
+    #basedir = os.path.abspath(os.path.dirname(__file__))
+    #return str(os.path.join(basedir,'static'))
+    return send_from_directory(os.path.join('.', 'static'), 'login.html')
+
 def logout():
     session.pop("username", None)
-    return url_for("login")
+    return redirect(url_for("login_page"))
 
 
 @app.route('/session/<session_id>', methods=['GET'])
 def get_session(session_id):
+    """
+    if "username" in session:
+        is_authorized = False
+        username = session["username"]
+        cur_user = User.get_by_username(username)
+        authorized_user = User.get_user_for_session()
+        
+        if cur_user:
+            if authorized_user:
+                if authorized_user._id == cur_user._id:
+                    is_authorized = True
+            else:
+                cur_user.save_session(session_id)
+                is_authorized = True
+
+            if is_authorized: 
+                #Retrieve the objects by session
+                containers = TasksContainer.get_all_by_session(session_id)
+                for cur_container in containers:
+                    for cur_task in cur_container.my_tasks:
+                        cur_cfg = ConfigTask.get_by_task_id(cur_task._id)
+                        if cur_cfg:
+                            cur_task.color_id = cur_cfg.color_id
+                containers_JSON = [container.to_json() for container in containers]
+                session_response = make_response(json.dumps(containers_JSON))
+                set_cors_header(session_response)
+                return session_response
+            else:
+                return "Not authorized" 
+    """
+    #return redirect(url_for("login_page"))
     #Retrieve the objects by session
     containers = TasksContainer.get_all_by_session(session_id)
     for cur_container in containers:

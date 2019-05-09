@@ -308,30 +308,33 @@ class User():
         bcrypt = Bcrypt()
         return bcrypt.check_password_hash(self._password, password)
 
+    def save_session(self, session_id):
+        UserMapper.save_session(self, session_id)
+
     @classmethod
     def get_by_username(cls, username):
         """ Get user instance by id
-        
         Args:
             id: id of the user to retrieve
-
         """
         user_instance = None
-
         user_instance = User(*UserMapper.get_row_by_username(username))      
-
         return user_instance
 
     @classmethod
     def get_by_id(cls, _id):
         """ Get user instance by id
-        
         Args:
             id: id of the user to retrieve
-
         """
         user_instance = None
-
         user_instance = User(*UserMapper.get_row_by_id(_id))      
-
         return user_instance
+
+    @classmethod
+    def get_user_for_session(cls, session_id):
+        UserMapper.get_user_for_session(session_id)
+
+
+
+
