@@ -1,6 +1,6 @@
 import os
 import json
-from flask import make_response, request, send_from_directory, url_for
+from flask import make_response, request, send_from_directory, url_for, session
 from app import app
 from model.models import TasksContainer, Task, ConfigTask, User
 
@@ -20,6 +20,7 @@ def register():
     user_ins = json.loads(request.data)
     new_user = User(None, user_ins["username"], user_ins["password"], user_ins["email"], False)
     new_user.save()
+    session["username"] = user_ins["username"]
     return new_user.to_json()
 
 @app.route('/login', methods=['POST'])
@@ -27,9 +28,15 @@ def login():
     user_ins = json.loads(request.data)
     cur_user = User.get_by_username(user_ins["username"])
     if cur_user.is_password_valid(user_ins["password"]):
+        session["username"] = user_ins["username"]
         return cur_user.to_json()
     else:
         return json.dumps({"Error Message":"Wrong username/password"})
+
+def logout():
+    session.pop("username", None)
+    return url_for("login")
+
 
 @app.route('/session/<session_id>', methods=['GET'])
 def get_session(session_id):
