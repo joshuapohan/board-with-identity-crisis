@@ -111,6 +111,7 @@
                     username: '',
                     password: '',
                     email:'',
+                    repeatPW: '',
                     isRegisterMode: false
                 }
 
@@ -119,6 +120,7 @@
                 this.usernameChange = this.usernameChange.bind(this);
                 this.emailChange = this.emailChange.bind(this);
                 this.passwordChange = this.passwordChange.bind(this);
+                this.repeatPWChange = this.repeatPWChange.bind(this);
             }
 
             usernameChange(e){
@@ -145,6 +147,14 @@
                 );
             }
 
+            repeatPWChange(e){
+                this.setState(
+                    {
+                        repeatPW: e.target.value
+                    }
+                );
+            }
+
             onClickLogin(e){
                 fetch('https://bwic.herokuapp.com/login',{
                     method: 'POST',
@@ -160,15 +170,20 @@
 
             onClickRegister(e){
                 if(this.state.isRegisterMode){
-                    fetch('https://bwic.herokuapp.com/register',{
-                        method: 'POST',
-                        headers: {'Content-Type': 'text/plain'},
-                        body: JSON.stringify({
-                            username: this.state.username,
-                            password: this.state.password,
-                            email: this.state.email
-                        })
-                    }).then((response)=>window.location = '/');
+                    if(this.state.password === this.state.repeatPW){
+                        fetch('https://bwic.herokuapp.com/register',{
+                            method: 'POST',
+                            headers: {'Content-Type': 'text/plain'},
+                            body: JSON.stringify({
+                                username: this.state.username,
+                                password: this.state.password,
+                                email: this.state.email
+                            })
+                        }).then((response)=>window.location = '/');                        
+                    } else{
+                        alert("Password is not the same");
+                    }
+
                 }
                 else{
                     this.setState({
@@ -204,7 +219,7 @@
                                             <label htmlFor="username">Password</label>
                                             <input name="password" className="field-bar" type="password" id="pass_input" onChange={this.passwordChange}></input><br/>
                                                 {   this.state.isRegisterMode
-                                                    ?    <input name="password" className="field-bar" type="password" id="pass_input" onChange={this.passwordChange}></input>
+                                                    ?    <input name="password" className="field-bar" type="password" id="pass_input" onChange={this.repeatPWChange}></input>
                                                     :    null
                                                 }
                                         </div>
