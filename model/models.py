@@ -10,7 +10,7 @@ Todo:
 
 import json
 from flask_bcrypt import Bcrypt
-from .models_mapper import TasksContainerMapper, TaskMapper, ConfigTaskMapper, UserMapper
+from .models_mapper import TasksContainerMapper, TaskMapper, ConfigTaskMapper, UserMapper, TaskSessionMapper
 
 class TasksContainer:
     """ Container class to hold list of Task instances
@@ -311,6 +311,9 @@ class User():
     def save_session(self, session_id):
         UserMapper.save_session(self, session_id)
 
+    def get_my_sessions(self):
+        UserMapper.get_all_sessions(self)
+
     @classmethod
     def get_by_username(cls, username):
         """ Get user instance by id
@@ -335,6 +338,19 @@ class User():
     def get_user_for_session(cls, session_id):
         UserMapper.get_user_for_session(session_id)
 
+class TaskSession():
 
+    def __init__(self, _id, name):
+        self._id = _id
+        self.name = name
 
+    @classmethod
+    def get_by_id(_id):
+        session_row = TaskSessionMapper.get_by_id(_id)
+        session_ins = None
+        if len(session_row) > 0:
+            session_ins = TaskSession(*session_ins)
+        return session_ins
 
+    def save():
+        TaskSessionMapper.save(self)

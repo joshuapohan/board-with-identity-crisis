@@ -43,6 +43,15 @@ def logout():
     session.pop("username", None)
     return redirect(url_for("login_page"))
 
+@app.route('/sessions', methods=['GET'])
+def get_sessions:
+    if "username" in session:
+        username = session["username"]
+        cur_user = User.get_by_username(username)
+        session_id = cur_user.get_my_sessions()   
+        return json.dumps({
+            sessions: session_id
+        });
 
 @app.route('/session/<session_id>', methods=['GET'])
 def get_session(session_id):

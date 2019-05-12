@@ -729,6 +729,30 @@ class UserMapper:
             return cls.postgres_get_user_for_session(session_id)
 
     @classmethod
+    def get_all_sessions(username):
+        db_type = Config.get_db_type()
+        if db_type == 0:
+            pass
+        elif db_type == 1:
+            return cls.sqlite_get_all_sessions(username)
+        elif db_type == 2:
+            return cls.postgres_get_all_sessions(username)
+
+    @classmethod
+    def postgres_get_all_sessions(username):
+        connection = get_postgres_connection()
+        cursor = connection.cursor()
+        select_stmt = "SELECT session_id FROM user_rel_session AS a INNER JOIN users as b ON a.user_id = b.user_id WHERE b.username=%s;"
+        cursor.execute(select_stmt, (username,))
+        sessions = cursor.fetchone()
+        cursor.close()
+        connection.close()
+        if len(sessions) > 0:
+            return sessions[0]
+        else:
+            return 0
+
+    @classmethod
     def postgres_save(cls, user):
         connection = get_postgres_connection()
         cursor = connection.cursor()
@@ -838,4 +862,69 @@ class UserMapper:
 
     @classmethod
     def sqlite_get_user_for_session(cls, session_id):
+        pass
+
+    @classmethod
+    def sqlite_get_all_sessions(username):
+        pass
+
+class TaskSessionMapper():
+
+    @classmethod
+    def save(task_session):
+        db_type = Config.get_db_tyspe()
+        if db_type == 0:
+            pass
+        elif db_type == 1:
+            cls.sqlite_save(task_session)
+        elif db_type == 2:
+            cls.postgres_save(task_session)
+
+    @classmethod
+    def get_by_id(_id):
+        db_type = Config.get_db_type()
+        if db_type == 0:
+            pass
+        elif db_type == 1:
+            cls.sqlite_get_by_id(_id)
+        elif db_type == 2:
+            cls.postgres_get_by_id(_id)
+
+    @classmethod
+    def postgres_save(task_session):
+        connection = get_postgres_connection()
+        cursor = connection.cursor()
+        if task_session._id:
+            # if _id exists then it must have been stored in the db
+            insert_container_stmt = "UPDATE task_session SET name=%s WHERE id=%s;"
+            cursor.execute(insert_container_stmt, (task_session._name, task_session._id,))
+        else:
+            # if no _id then create new
+            insert_container_stmt = "INSERT INTO task_session VALUES(DEFAULT,%s,%s) RETURNING id;"
+            cursor.execute(insert_container_stmt, (task_session._id, task_session._name,))     
+            task_session._id = cursor.fetchone()[0]
+
+        cursor.close()
+        connection.close()
+        
+
+    @classmethod
+    def postgres_get_by_id(_id):
+        connection = get_postgres_connection()
+        cursor = connection.cursor()
+        select_container_stmt = "SELECT * FROM  task_session WHERE id=%s;"
+        cursor.execute(insert_container_stmt, (task_session._id,))
+        session = cursor.fetchone()
+        cursor.close()
+        connection.close()
+        if len(session) > 0:
+            return session[0]
+        else:
+            return 0
+    @classmethod
+    def sqlite_save(task_session):
+        pass
+        
+    @classmethod
+    def sqlite_get_by_id(_id):
         pass
