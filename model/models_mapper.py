@@ -729,7 +729,7 @@ class UserMapper:
             return cls.postgres_get_user_for_session(session_id)
 
     @classmethod
-    def get_all_sessions(username):
+    def get_all_sessions(cls, username):
         db_type = Config.get_db_type()
         if db_type == 0:
             pass
@@ -739,10 +739,10 @@ class UserMapper:
             return cls.postgres_get_all_sessions(username)
 
     @classmethod
-    def postgres_get_all_sessions(username):
+    def postgres_get_all_sessions(cls, username):
         connection = get_postgres_connection()
         cursor = connection.cursor()
-        select_stmt = "SELECT session_id FROM user_rel_session AS a INNER JOIN users as b ON a.user_id = b.user_id WHERE b.username=%s;"
+        select_stmt = "SELECT session_id FROM user_rel_session AS a INNER JOIN users as b ON a.user_id = b._id WHERE b.username=%s;"
         cursor.execute(select_stmt, (username,))
         sessions = cursor.fetchone()
         cursor.close()
@@ -765,19 +765,6 @@ class UserMapper:
             insert_user_stmt = "INSERT INTO users VALUES(DEFAULT,%s,%s,%s,%s) RETURNING id;"
             cursor.execute(insert_user_stmt, (user._name, user._password, user.email, user.is_validated))     
             user._id = cursor.fetchone()[0]
-
-
-        if user._id:
-            pass
-            # Delete all existing relations for this object first
-            delete_relation_stmt = "DELETE FROM user_rel_session WHERE user_id=%s;"
-            cursor.execute(delete_relation_stmt, (user._id,))
-
-            #insert all relations
-            insert_session_relation_stmt = "INSERT INTO user_rel_session VALUES(%s,%s)"
-            for session_id in user.session_ids:
-                cursor.execute(insert_session_relation_stmt, (user._id, session_id))
-            connection.commit()
 
         cursor.close()
         connection.close()
@@ -827,7 +814,7 @@ class UserMapper:
         connection = get_postgres_connection()
         cursor = connection.cursor()
 
-        select_stmt = "SELECT * FROM users AS A INNER JOIN user_rel_session AS B WHERE B.session_id=%s"
+        select_stmt = "SELECT * FROM users AS A INNER JOIN user_rel_session AS B ON A._id=B.user_id WHERE B.session_id=%s"
         cursor.execute(select_stmt, (session_id,))
         user_row  = cursor.fetchone()
 
@@ -865,13 +852,13 @@ class UserMapper:
         pass
 
     @classmethod
-    def sqlite_get_all_sessions(username):
+    def sqlite_get_all_sessions(cls, username):
         pass
 
 class TaskSessionMapper():
 
     @classmethod
-    def save(task_session):
+    def save(cls, task_session):
         db_type = Config.get_db_tyspe()
         if db_type == 0:
             pass
@@ -881,7 +868,7 @@ class TaskSessionMapper():
             cls.postgres_save(task_session)
 
     @classmethod
-    def get_by_id(_id):
+    def get_by_id(cls, _id):
         db_type = Config.get_db_type()
         if db_type == 0:
             pass
@@ -891,7 +878,27 @@ class TaskSessionMapper():
             cls.postgres_get_by_id(_id)
 
     @classmethod
-    def postgres_save(task_session):
+    def get_by_name(cls, name):
+        db_type = Config.get_db_type()
+        if db_type == 0:
+            pass
+        elif db_type == 1:
+            cls.sqlite_get_by_name(name)
+        elif db_type == 2:
+            cls.postgres_get_by_name(name)
+
+    @classmethod
+    def add_user(cls, user, task_session):
+        db_type = Config.get_db_type()
+        if db_type == 0:
+            pass
+        elif db_type == 1:
+            cls.sqlite_add_user(user, task_session)
+        elif db_type == 2:
+            cls.postgres_add_user(user, task_session)
+
+    @classmethod
+    def postgres_save(cls, task_session):
         connection = get_postgres_connection()
         cursor = connection.cursor()
         if task_session._id:
@@ -909,11 +916,11 @@ class TaskSessionMapper():
         
 
     @classmethod
-    def postgres_get_by_id(_id):
+    def postgres_get_by_id(cls, _id):
         connection = get_postgres_connection()
         cursor = connection.cursor()
         select_container_stmt = "SELECT * FROM  task_session WHERE id=%s;"
-        cursor.execute(insert_container_stmt, (task_session._id,))
+        cursor.execute(insert_container_stmt, (_id,))
         session = cursor.fetchone()
         cursor.close()
         connection.close()
@@ -921,10 +928,46 @@ class TaskSessionMapper():
             return session[0]
         else:
             return 0
+
     @classmethod
-    def sqlite_save(task_session):
+    def postgres_get_by_name(cls, name):
+        connection = get_postgres_connection()
+        cursor = connection.cursor()
+        select_container_stmt = "SELECT * FROM  task_session WHERE name=%s;"
+        cursor.execute(insert_container_stmt, (name,))
+        session = cursor.fetchone()
+        cursor.close()
+        connection.close()
+        if len(session) > 0:
+            return session[0]
+        else:
+            return 0
+
+    @classmethod
+    def postgres_add_user(cls, user, task_session):
+        connection = get_postgres_connection()
+        cursor = connection.cursor()
+
+        insert_stmt = "INSERT INTO user_rel_session VALUES(%s,%s)"
+        cursor.execute(insert_stmt, (user._id, task_session._id,))
+        user_row  = cursor.fetchone()
+
+        cursor.close()
+        connection.close()
+
+
+    @classmethod
+    def sqlite_save(cls, task_session):
         pass
         
     @classmethod
-    def sqlite_get_by_id(_id):
+    def sqlite_get_by_id(cls,_id):
+        pass
+
+    @classmethod
+    def sqlite_get_by_name(cls, _id):
+        pass
+
+    @classmethod
+    def sqlite_add_user(cls, user, task_session):
         pass

@@ -2,7 +2,7 @@ import os
 import json
 from flask import make_response, request, send_from_directory, url_for, session
 from app import app
-from model.models import TasksContainer, Task, ConfigTask, User
+from model.models import TasksContainer, Task, ConfigTask, User, TaskSession
 
 def set_cors_header(response):
     response.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS,PUT,DELETE"
@@ -33,6 +33,19 @@ def login():
     else:
         return json.dumps({"Error Message":"Wrong username/password"})
 
+@app.rout('/newsession/<session_name>', methods=['POST'])
+def new_session(session_name):
+    user_ins = json.loads(request.data)
+    cur_user = User.get_by_username(user_ins["username"])
+    if cur_user.is_password_valid(user_ins["password"]):
+        new_session = TaskSession(None, session_name)
+        new_session.save()
+        new_session.add_user(cur_user, new_session)
+        return json.dumps({"Message":"Session created"})
+    else:
+        return json.dumps({"Error Message":"Please login first"})
+
+
 @app.route('/login',  methods=['GET'])
 def login_page():
     #basedir = os.path.abspath(os.path.dirname(__file__))
@@ -44,7 +57,7 @@ def logout():
     return redirect(url_for("login_page"))
 
 @app.route('/sessions', methods=['GET'])
-def get_sessions:
+def get_sessions():
     if "username" in session:
         username = session["username"]
         cur_user = User.get_by_username(username)

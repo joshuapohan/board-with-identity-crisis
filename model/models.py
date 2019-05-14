@@ -344,6 +344,20 @@ class TaskSession():
         self._id = _id
         self.name = name
 
+    def save():
+        TaskSessionMapper.save(self)
+
+    def add_user(user, task_session):
+        TaskSessionMapper.add_user(user, task_session)
+
+    @classmethod
+    def get_by_name(name):
+        session_row = TaskSessionMapper.get_by_name(name)
+        session_ins = None
+        if len(session_row) > 0:
+            session_ins = TaskSession(*session_row)
+        return session_ins
+
     @classmethod
     def get_by_id(_id):
         session_row = TaskSessionMapper.get_by_id(_id)
@@ -351,6 +365,3 @@ class TaskSession():
         if len(session_row) > 0:
             session_ins = TaskSession(*session_ins)
         return session_ins
-
-    def save():
-        TaskSessionMapper.save(self)
