@@ -286,7 +286,7 @@ class User():
 
     def __init__(self, _id, name, password, email, is_validated=False):
         
-        self._id = None
+        self._id = _id
         self._name = name
         self.email = email
         self.is_validated = is_validated
@@ -344,10 +344,10 @@ class TaskSession():
         self._id = _id
         self.name = name
 
-    def save():
+    def save(self):
         TaskSessionMapper.save(self)
 
-    def add_user(user, task_session):
+    def add_user(self, user, task_session):
         TaskSessionMapper.add_user(user, task_session)
 
     @classmethod

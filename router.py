@@ -33,15 +33,20 @@ def login():
     else:
         return json.dumps({"Error Message":"Wrong username/password"})
 
-@app.rout('/newsession/<session_name>', methods=['POST'])
-def new_session(session_name):
-    user_ins = json.loads(request.data)
-    cur_user = User.get_by_username(user_ins["username"])
-    if cur_user.is_password_valid(user_ins["password"]):
-        new_session = TaskSession(None, session_name)
-        new_session.save()
-        new_session.add_user(cur_user, new_session)
-        return json.dumps({"Message":"Session created"})
+@app.route('/newsession', methods=['POST'])
+def new_session():
+    if "username" in session:
+        username = session["username"]
+        cur_user = User.get_by_username(username)
+        print(cur_user.__dict__)
+        if cur_user:
+            session_json = json.loads(request.data)
+            new_session = TaskSession(None, session_json['session_name'])
+            new_session.save()
+            new_session.add_user(cur_user, new_session)
+            return json.dumps({"session_id":new_session._id})
+        else:
+            return json.dumps({"Error Message":"Invalid session, please login"})
     else:
         return json.dumps({"Error Message":"Please login first"})
 

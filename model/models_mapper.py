@@ -766,6 +766,7 @@ class UserMapper:
             cursor.execute(insert_user_stmt, (user._name, user._password, user.email, user.is_validated))     
             user._id = cursor.fetchone()[0]
 
+        connection.commit()
         cursor.close()
         connection.close()
 
@@ -859,7 +860,7 @@ class TaskSessionMapper():
 
     @classmethod
     def save(cls, task_session):
-        db_type = Config.get_db_tyspe()
+        db_type = Config.get_db_type()
         if db_type == 0:
             pass
         elif db_type == 1:
@@ -883,9 +884,9 @@ class TaskSessionMapper():
         if db_type == 0:
             pass
         elif db_type == 1:
-            cls.sqlite_get_by_name(name)
+            return cls.sqlite_get_by_name(name)
         elif db_type == 2:
-            cls.postgres_get_by_name(name)
+            return cls.postgres_get_by_name(name)
 
     @classmethod
     def add_user(cls, user, task_session):
@@ -904,13 +905,14 @@ class TaskSessionMapper():
         if task_session._id:
             # if _id exists then it must have been stored in the db
             insert_container_stmt = "UPDATE task_session SET name=%s WHERE id=%s;"
-            cursor.execute(insert_container_stmt, (task_session._name, task_session._id,))
+            cursor.execute(insert_container_stmt, (task_session.name, task_session._id,))
         else:
             # if no _id then create new
-            insert_container_stmt = "INSERT INTO task_session VALUES(DEFAULT,%s,%s) RETURNING id;"
-            cursor.execute(insert_container_stmt, (task_session._id, task_session._name,))     
+            insert_container_stmt = "INSERT INTO task_session VALUES(DEFAULT,%s) RETURNING id;"
+            cursor.execute(insert_container_stmt, (task_session.name,))     
             task_session._id = cursor.fetchone()[0]
 
+        connection.commit()
         cursor.close()
         connection.close()
         
@@ -950,8 +952,8 @@ class TaskSessionMapper():
 
         insert_stmt = "INSERT INTO user_rel_session VALUES(%s,%s)"
         cursor.execute(insert_stmt, (user._id, task_session._id,))
-        user_row  = cursor.fetchone()
 
+        connection.commit()
         cursor.close()
         connection.close()
 
