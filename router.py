@@ -1,6 +1,6 @@
 import os
 import json
-from flask import make_response, request, send_from_directory, url_for, session
+from flask import make_response, request, send_from_directory, url_for, session, redirect
 from app import app
 from model.models import TasksContainer, Task, ConfigTask, User, TaskSession
 
@@ -64,12 +64,19 @@ def logout():
 @app.route('/sessions', methods=['GET'])
 def get_sessions():
     if "username" in session:
+        session_list = []
         username = session["username"]
         cur_user = User.get_by_username(username)
-        session_id = cur_user.get_my_sessions()   
+        session_ids = cur_user.get_my_sessions()
+        for _id in session_ids:
+            cur_session = TaskSession.get_by_id(_id)
+            if cur_session:
+                session_list.append({'_id':cur_session._id,'name':cur_session.name})
         return json.dumps({
-            sessions: session_id
+            'sessions': session_list
         });
+    else:
+        return json.dumps({"Error Message":"Please login first"})
 
 @app.route('/session/<session_id>', methods=['GET'])
 def get_session(session_id):

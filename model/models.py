@@ -312,7 +312,7 @@ class User():
         UserMapper.save_session(self, session_id)
 
     def get_my_sessions(self):
-        UserMapper.get_all_sessions(self)
+        return UserMapper.get_all_sessions(self)
 
     @classmethod
     def get_by_username(cls, username):
@@ -351,17 +351,17 @@ class TaskSession():
         TaskSessionMapper.add_user(user, task_session)
 
     @classmethod
-    def get_by_name(name):
+    def get_by_name(cls, name):
         session_row = TaskSessionMapper.get_by_name(name)
         session_ins = None
-        if len(session_row) > 0:
+        if session_row and len(session_row) > 0:
             session_ins = TaskSession(*session_row)
         return session_ins
 
     @classmethod
-    def get_by_id(_id):
+    def get_by_id(cls, _id):
         session_row = TaskSessionMapper.get_by_id(_id)
         session_ins = None
-        if len(session_row) > 0:
-            session_ins = TaskSession(*session_ins)
+        if session_row and len(session_row) > 0:
+            session_ins = TaskSession(*session_row)
         return session_ins

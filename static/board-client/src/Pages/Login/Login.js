@@ -3,9 +3,28 @@ import React from 'react';
 class LoginPage extends React.Component{
     constructor(props){
         super(props);
+        this.state = {
+            sessions: []
+        }
         this.viewSessionPage = this.viewSessionPage.bind(this);
         this.newSession = this.newSession.bind(this);
         this.viewSession = this.viewSession.bind(this);
+    }
+
+    componentDidMount(){
+        let urlForSessions = "/sessions";
+        let self = this;
+        fetch(urlForSessions,
+        {
+            method: 'GET'
+        })
+        .then((response)=>response.json())
+        .then(function(session_list){
+            self.setState({
+                sessions: session_list['sessions']
+            })
+        })
+        .catch((err)=>console.log(err));      
     }
 
     viewSessionPage(){
@@ -32,12 +51,20 @@ class LoginPage extends React.Component{
     }
 
     render(){
+        let self = this;
         return(
             <div>
                 <input type="text" id="session"></input>
                 <button onClick={this.viewSessionPage}>View Session</button>
                 <input type="text" id="session_name"></input>
                 <button onClick={this.newSession}>New Session</button>
+                <div>
+                    {this.state.sessions.map(function(session){
+                        return(<div>
+                            <button onClick={()=>self.viewSession(session._id)}>{session.name}</button>
+                        </div>);
+                    })}
+                </div>
             </div>
         );
     }

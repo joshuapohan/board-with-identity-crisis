@@ -739,18 +739,18 @@ class UserMapper:
             return cls.postgres_get_all_sessions(username)
 
     @classmethod
-    def postgres_get_all_sessions(cls, username):
+    def postgres_get_all_sessions(cls, user):
         connection = get_postgres_connection()
         cursor = connection.cursor()
-        select_stmt = "SELECT session_id FROM user_rel_session AS a INNER JOIN users as b ON a.user_id = b._id WHERE b.username=%s;"
-        cursor.execute(select_stmt, (username,))
-        sessions = cursor.fetchone()
+        select_stmt = "SELECT session_id FROM user_rel_session AS a INNER JOIN users as b ON a.user_id = b.id WHERE b.username=%s;"
+        cursor.execute(select_stmt, (user._name,))
+        sessions = cursor.fetchall()
         cursor.close()
         connection.close()
         if len(sessions) > 0:
-            return sessions[0]
+            return sessions
         else:
-            return 0
+            return []
 
     @classmethod
     def postgres_save(cls, user):
@@ -815,7 +815,7 @@ class UserMapper:
         connection = get_postgres_connection()
         cursor = connection.cursor()
 
-        select_stmt = "SELECT * FROM users AS A INNER JOIN user_rel_session AS B ON A._id=B.user_id WHERE B.session_id=%s"
+        select_stmt = "SELECT * FROM users AS A INNER JOIN user_rel_session AS B ON A.id=B.user_id WHERE B.session_id=%s"
         cursor.execute(select_stmt, (session_id,))
         user_row  = cursor.fetchone()
 
@@ -874,9 +874,9 @@ class TaskSessionMapper():
         if db_type == 0:
             pass
         elif db_type == 1:
-            cls.sqlite_get_by_id(_id)
+            return cls.sqlite_get_by_id(_id)
         elif db_type == 2:
-            cls.postgres_get_by_id(_id)
+            return cls.postgres_get_by_id(_id)
 
     @classmethod
     def get_by_name(cls, name):
@@ -922,14 +922,14 @@ class TaskSessionMapper():
         connection = get_postgres_connection()
         cursor = connection.cursor()
         select_container_stmt = "SELECT * FROM  task_session WHERE id=%s;"
-        cursor.execute(insert_container_stmt, (_id,))
+        cursor.execute(select_container_stmt, (_id,))
         session = cursor.fetchone()
         cursor.close()
         connection.close()
         if len(session) > 0:
-            return session[0]
+            return session
         else:
-            return 0
+            return []
 
     @classmethod
     def postgres_get_by_name(cls, name):
@@ -941,9 +941,9 @@ class TaskSessionMapper():
         cursor.close()
         connection.close()
         if len(session) > 0:
-            return session[0]
+            return session
         else:
-            return 0
+            return []
 
     @classmethod
     def postgres_add_user(cls, user, task_session):
