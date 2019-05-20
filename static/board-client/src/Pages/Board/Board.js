@@ -370,7 +370,7 @@ class Board extends React.Component{
         this.blockRefs = [];
         this.taskRefs = [];
         /*DEBUG manually set the session id for now*/
-        this.session_id = this.props.session_id || 1;
+        this.session_id = this.props.session._id || 1;
         /* methods binding */
         this.addBlock = this.addBlock.bind(this);
         this.addTask = this.addTask.bind(this);
@@ -384,7 +384,6 @@ class Board extends React.Component{
         }).then((response)=>response.json())
         .then((retrievedBlocks)=> retrievedBlocks.forEach((curBlock)=>{
             let curBlockObj = JSON.parse(curBlock);
-            console.log(curBlockObj);
             this.setState({
               blockList: this.state.blockList.concat(<TasksBlock instanceObj={curBlockObj} removeTask={this.removeTask} ref={selfInstance.addBlockRef} _id={curBlockObj._id} key={curBlockObj._id} />)
             })
@@ -472,7 +471,7 @@ class Board extends React.Component{
     render(){
         return(
             <div>
-                <h1 style={SessionHeadingStyle}>Session {this.session_id}</h1>
+                <h1 style={SessionHeadingStyle}> {this.props.session.name}</h1>
                 <button className="main_buttons main_buttons_color_1" onClick={this.addBlock}>Add Block</button>
                 <button className="main_buttons main_buttons_color_2" onClick={this.addTask}>Add Task</button>
                 <div>

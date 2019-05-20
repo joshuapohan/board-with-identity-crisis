@@ -10,16 +10,16 @@ class App extends Component {
         super(props);
         this.state = {
           mode: 0,
-          session_id: 0
+          session: null
         };
         this.viewBoard = this.viewBoard.bind(this);
     }
 
-    viewBoard(session_id){
+    viewBoard(session){
         this.setState(
             {
               mode:1,
-              session_id: session_id
+              session: session
             }
         );
     }
@@ -34,7 +34,7 @@ class App extends Component {
                             case 0:
                                 return  <Login viewBoard={self.viewBoard}/>;
                             case 1:
-                                return <Board session_id={self.state.session_id}/>;
+                                return <Board session={self.state.session}/>;
                             default:
                                 return <Login viewBoard={self.viewBoard}/>;
                         }

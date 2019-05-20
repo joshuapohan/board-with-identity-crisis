@@ -32,8 +32,8 @@ class LoginPage extends React.Component{
         this.props.viewBoard(session_id);
     }
 
-    viewSession(session_id){
-        this.props.viewBoard(session_id);
+    viewSession(session){
+        this.props.viewBoard(session);
     }
 
     newSession(){
@@ -46,7 +46,7 @@ class LoginPage extends React.Component{
             body: JSON.stringify({'session_name':session_name})
         })
         .then((response)=>response.json())
-        .then((response)=>this.viewSession(response['session_id']))
+        .then((response)=>this.viewSession(response))
         .catch((err)=>console.log(err));
     }
 
@@ -54,14 +54,12 @@ class LoginPage extends React.Component{
         let self = this;
         return(
             <div>
-                <input type="text" id="session"></input>
-                <button onClick={this.viewSessionPage}>View Session</button>
                 <input type="text" id="session_name"></input>
                 <button onClick={this.newSession}>New Session</button>
                 <div>
                     {this.state.sessions.map(function(session){
                         return(<div>
-                            <button onClick={()=>self.viewSession(session._id)}>{session.name}</button>
+                            <button onClick={()=>self.viewSession(session)}>{session.name}</button>
                         </div>);
                     })}
                 </div>

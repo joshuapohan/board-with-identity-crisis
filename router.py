@@ -44,7 +44,7 @@ def new_session():
             new_session = TaskSession(None, session_json['session_name'])
             new_session.save()
             new_session.add_user(cur_user, new_session)
-            return json.dumps({"session_id":new_session._id})
+            return json.dumps({"_id":new_session._id, "name":new_session.name})
         else:
             return json.dumps({"Error Message":"Invalid session, please login"})
     else:
