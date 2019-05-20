@@ -170,7 +170,7 @@ class TasksBlock extends React.Component{
         if(this.state.mode === 0){
             return(
                 <div id={this.state._id} style={TasksBlockDivStyle} onDrop={this.drop} onDragOver={this.allowDrop}>
-                    <div>
+                    <div className="container_title">
                         <h1 onDoubleClick={this.switchMode}>{this.state._title}</h1>
                     </div>
                     {this.state.myTasks.map(function(task){

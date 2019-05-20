@@ -38,3 +38,11 @@ body{
      cursor: pointer;
      background-color: #00d1cd;
 }
+
+.container_title{
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin-top: 0;
+    background-color: 'cadetblue';
+    border-radius: '20px 20px 0px 0px';
+}
