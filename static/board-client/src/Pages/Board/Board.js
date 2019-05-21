@@ -68,7 +68,7 @@ const DeleteButtonStyle ={
 const SessionHeadingStyle = {
   textAlign: 'center',
   color: 'white',
-  fontFamily: 'Roboto'
+  fontFamily: 'Roboto',
   backgroundColor: 'black',
   padding: '5px'
 }
