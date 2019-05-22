@@ -13,6 +13,7 @@ class App extends Component {
           session: null
         };
         this.viewBoard = this.viewBoard.bind(this);
+        this.viewMain = this.viewMain.bind(this);
     }
 
     viewBoard(session){
