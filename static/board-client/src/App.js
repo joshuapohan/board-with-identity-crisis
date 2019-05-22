@@ -24,6 +24,15 @@ class App extends Component {
         );
     }
 
+    viewMain(){
+        this.setState(
+            {
+                mode:0,
+                session:null
+            }
+        );
+    }
+
     render() {
         let self = this;
         return (
@@ -34,7 +43,7 @@ class App extends Component {
                             case 0:
                                 return  <Login viewBoard={self.viewBoard}/>;
                             case 1:
-                                return <Board session={self.state.session}/>;
+                                return <Board session={self.state.session} viewMain={self.viewMain}/>;
                             default:
                                 return <Login viewBoard={self.viewBoard}/>;
                         }

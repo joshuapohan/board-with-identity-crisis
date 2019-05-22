@@ -6,8 +6,6 @@ const TasksBlockDivStyle = {
   backgroundColor: 'floralwhite',
   width: '300px',
   minHeight: '300px',
-  border: '2px solid black',
-  borderRadius: '25px',
   display: 'inline-block',
   marginRight: '30px',
   textAlign: 'center',
@@ -19,7 +17,6 @@ const TasksBlockDivStyle = {
 const TaskViewStyle = {
   width: '250px',
   minHeight: '50px',
-  border: '2px solid #223052',
   borderRadius: '18px',
   display: 'block',
   margin: 'auto',
@@ -471,18 +468,29 @@ class Board extends React.Component{
     render(){
         return(
             <div>
-                <h1 style={SessionHeadingStyle}> {this.props.session.name}</h1>
-                <button className="main_buttons main_buttons_color_1" onClick={this.addBlock}>Add Block</button>
-                <button className="main_buttons main_buttons_color_2" onClick={this.addTask}>Add Task</button>
-                <div>
-                    {this.state.blockList.map(function(curBlock, index){
-                      return(curBlock);
-                    })}
+                <div class="title-bar">
+                    <div class="title-div">
+                        <h1 class="title">{this.props.session.name}</h1>                
+                    </div>
                 </div>
+                <div class="action-bar">
+                    <div class="action-div">
+                        <h3 class="actions">Actions : </h3>
+                        <button className="main_buttons main_buttons_color_1" onClick={this.addBlock}>Add Block</button>
+                        <button className="main_buttons main_buttons_color_2" onClick={this.addTask}>Add Task</button>
+                        <button className="main_buttons main_buttons_color_3" onClick={this.props.viewMain}>Back</button>
+                    </div>
+                </div>
+                <h1 style={SessionHeadingStyle}> {this.props.session.name}</h1>}
                 <div>
                     {this.state.taskList.map(function(curTask, index){
                       return(curTask);
                     })}                                                      
+                </div>
+                <div>
+                    {this.state.blockList.map(function(curBlock, index){
+                      return(curBlock);
+                    })}
                 </div>
             </div>
         );

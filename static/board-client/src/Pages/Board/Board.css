@@ -9,22 +9,25 @@ body{
     border: 2px solid;
 }
 .main_buttons{
-     border: none;
-     color: white;
-     padding: 15px 20px;
-     text-align: center;
-     text-decoration: none;
-     display: inline-block;
-     font-size: 16px;
-     border-radius: 5px;
-     margin: 5px;
-     cursor: pointer;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
 }
 .main_buttons_color_1{
      background-color: #2a6171;
 }
 .main_buttons_color_2{
      background-color: #f34573;        
+}
+.main_buttons_color_3{
+     background-color: gold;        
 }
 .save_buttons{
      border: none;
@@ -44,7 +47,50 @@ body{
     padding-top: 1px;
     padding-bottom: 1px;
     margin-top: 0;
-    border-radius: 20px 20px 0px 0px;
     background-color: cadetblue;
     font-family: 'Roboto'
+}
+
+.title-bar{
+    position: relative;
+    min-height: 80px;
+    background-color: #2f6f6f;
+}
+
+.title-div{
+    width: 50%;
+    height: 50%;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    text-align:center;
+}
+
+.title{
+    margin: 0px;
+    color: paleturquoise;
+    font-family: 'Roboto', sans-serif;
+}
+
+.action-bar{
+    display: block;
+    min-height: 50px;
+    background-color: #2f6f6f;
+    border-bottom: 5px solid #285a5a;
+    position: relative;            
+}
+
+.action-div{
+    width: 50%;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    text-align:center;            
+}
+
+.actions{
+    margin: 0px;
+    color: paleturquoise;
+    font-family: 'Roboto', sans-serif;
+    display: inline-block;    
 }
