@@ -1,5 +1,5 @@
 body{
-    background-color: #223052
+    background-color: darkslategray
 }
 .ColorPickerStyle{
     display: inline-block;
@@ -50,6 +50,7 @@ body{
     background-color: cadetblue;
     font-family: 'Roboto'
 }
+<<<<<<< HEAD
 
 .title-bar{
     position: relative;
@@ -94,3 +95,5 @@ body{
     font-family: 'Roboto', sans-serif;
     display: inline-block;    
 }
+=======
+>>>>>>> 44c3b6aa7a3e6d104bb9d59143db99052392377d

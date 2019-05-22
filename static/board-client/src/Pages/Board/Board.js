@@ -3,7 +3,7 @@ import './Board.css';
 import showdown from 'showdown';
 
 const TasksBlockDivStyle = {
-  backgroundColor: 'floralwhite',
+  backgroundColor: 'white',
   width: '300px',
   minHeight: '300px',
   display: 'inline-block',
@@ -65,7 +65,9 @@ const DeleteButtonStyle ={
 const SessionHeadingStyle = {
   textAlign: 'center',
   color: 'white',
-  fontFamily: 'Roboto'
+  fontFamily: 'Roboto',
+  backgroundColor: 'black',
+  padding: '5px'
 }
 
 class TasksBlock extends React.Component{
