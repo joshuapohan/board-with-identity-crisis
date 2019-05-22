@@ -470,20 +470,19 @@ class Board extends React.Component{
     render(){
         return(
             <div>
-                <div class="title-bar">
-                    <div class="title-div">
-                        <h1 class="title">{this.props.session.name}</h1>                
+                <div className="title-bar">
+                    <div className="title-div">
+                        <h1 className="title">{this.props.session.name}</h1>                
                     </div>
                 </div>
-                <div class="action-bar">
-                    <div class="action-div">
-                        <h3 class="actions">Actions : </h3>
+                <div className="action-bar">
+                    <div className="action-div">
+                        <h3 className="actions">Actions : </h3>
                         <button className="main_buttons main_buttons_color_1" onClick={this.addBlock}>Add Block</button>
                         <button className="main_buttons main_buttons_color_2" onClick={this.addTask}>Add Task</button>
                         <button className="main_buttons main_buttons_color_3" onClick={this.props.viewMain}>Back</button>
                     </div>
                 </div>
-                <h1 style={SessionHeadingStyle}> {this.props.session.name}</h1>}
                 <div>
                     {this.state.taskList.map(function(curTask, index){
                       return(curTask);

@@ -27,7 +27,7 @@ body{
      background-color: #f34573;        
 }
 .main_buttons_color_3{
-     background-color: gold;        
+     background-color: indianred;        
 }
 .save_buttons{
      border: none;
@@ -76,7 +76,7 @@ body{
     display: block;
     min-height: 50px;
     background-color: #2f6f6f;
-    border-bottom: 5px solid #285a5a;
+    border-bottom: 7px solid #285a5a;
     position: relative;            
 }
 

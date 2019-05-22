@@ -1,4 +1,5 @@
 import React from 'react';
+import './Login.css';
 
 class LoginPage extends React.Component{
     constructor(props){
@@ -54,19 +55,31 @@ class LoginPage extends React.Component{
         let self = this;
         return(
             <div>
-                <div class="title-bar">
-                    <div class="title-div">
-                        <h1 class="title">BwIC Web App</h1>                
+                <div className="title-bar">
+                    <div className="title-div">
+                        <h1 className="title">BwIC Web App</h1>                
                     </div>
                 </div>
-                <input type="text" id="session_name"></input>
-                <button onClick={this.newSession}>New Session</button>
-                <div>
-                    {this.state.sessions.map(function(session){
-                        return(<div>
-                            <button onClick={()=>self.viewSession(session)}>{session.name}</button>
-                        </div>);
-                    })}
+                <div className="main-content">
+                    <input type="text" id="session_name"></input>
+                    <button onClick={this.newSession}>New Session</button>
+                    <div className="session-div-container">
+                        <div className="session-div">
+                            <h2 className="session-title">Sessions : </h2>
+                            <table>
+                                {this.state.sessions.map(function(session){
+                                    return(
+                                        <React.Fragment>
+                                            <tr>
+                                                <td className="session-title">{session.name}</td>
+                                                <td><button className="main-button" onClick={()=>self.viewSession(session)}>View</button></td>
+                                            </tr>
+                                        </React.Fragment>
+                                    );
+                                })}
+                            </table>
+                        </div>
+                    </div> 
                 </div>
             </div>
         );

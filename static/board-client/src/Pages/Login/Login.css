@@ -18,3 +18,34 @@
     color: paleturquoise;
     font-family: 'Roboto', sans-serif;
 }
+
+.session-title{
+    color:white;
+}
+
+.session-div{
+    display:inline-block;
+}
+
+.session-div-container{
+    width: 100%;
+    text-align: center;
+}
+
+.main-content{
+    margin-top: 5px;
+}
+
+.main-button{
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+    background-color: #2a6171;
+}
