@@ -19,6 +19,7 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
     <style>
         html { 
           margin:0; 
@@ -32,7 +33,7 @@
 
         .menu-bar{
             margin-top:25px;
-            border-radius: 5px;
+            border-radius: 10px;
             text-align: center;
             background-color: #FFFFFF;
             width: 100%;
@@ -96,6 +97,19 @@
         .aspect-ratio{
             padding-top: 50%;
         }
+
+        .side-text{
+            font-family: 'Noto Sans',sans-serif;
+            margin-top:25px;
+            color: white;
+        }
+
+        .side-text-sub{
+            color:slategray
+        }
+
+
+
     </style>
 </head>
 
@@ -198,13 +212,19 @@
                 return(
                     <div className="container-fluid">
                         <div className="row">
-                            <div className="col-xs-2 col-sm-3 col-lg-4">
+                            <div className="col-xs-2 col-sm-2">
                             </div>
-                            <div className="col-xs-8 col-sm-6 col-lg-4 ">
+                            <div className="col-xs-2 col-sm-4 col-lg-4">
+                                <div className="side-text">
+                                    <h1>Welcome to a board</h1>
+                                    <h4 className="side-text-sub">Please login or register first, after that you'll be able to create task or goal boards</h4>
+                                </div>
+                            </div>
+                            <div className="col-xs-8 col-sm-4 col-lg-4">
                                 <div className="menu-bar">
                                     <h1 id="main_title">BIC</h1>
                                     <div className="logo_div">
-                                        <img src="https://via.placeholder.com/150"></img>
+                                        <img src="/static/logo.png"></img>
                                     </div>
                                     <div>
                                         <div className="form-group">
@@ -234,7 +254,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-xs-2 col-sm-3 col-lg-4">
+                            <div className="col-xs-2 col-sm-2">
                             </div>
                         </div>
                     </div>
