@@ -153,7 +153,7 @@ def db_update_task(task):
         if "username" in session:
             username = session["username"]
             cur_user = User.get_by_username(username)
-            if cur_user and cur_user.is_authorized_for_task(task["_id"]):
+            if cur_user and cur_user.is_authorized_for_task(int(task["_id"].replace("task",""))):
                 task_dict = None
                 cfg_dict = None
                 task_db_id = task["_id"].replace("task","")
