@@ -1,5 +1,6 @@
 import os
 import json
+from functools import wraps
 from flask import make_response, request, send_from_directory, url_for, session, redirect
 from app import app
 from model.models import TasksContainer, Task, ConfigTask, User, TaskSession
@@ -9,19 +10,40 @@ def set_cors_header(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Headers"] = "*"
 
+def login_required(f):
+    """
+        Decorator for routes requiring login
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "username" in session:
+            cur_user = User.get_by_username(session["username"])
+            if cur_user:
+                return f(*args, **kwargs)
+            else:
+                return redirect(url_for("login_page"))
+        else:
+            return redirect(url_for("login_page"))
+    return decorated_function
+        
+
 @app.route('/')
+@login_required
 def index():
-    #basedir = os.path.abspath(os.path.dirname(__file__))
-    #return str(os.path.join(basedir,'static'))
+    #check if logged in, if not redirect to login page
     return send_from_directory(os.path.join('.', 'static'), 'index.html')
 
 @app.route('/register', methods=['POST'])
 def register():
     user_ins = json.loads(request.data)
-    new_user = User(None, user_ins["username"], user_ins["password"], user_ins["email"], False)
-    new_user.save()
-    session["username"] = user_ins["username"]
-    return new_user.to_json()
+    is_name_taken = User.get_by_username is not None
+    if not is_name_taken:
+        new_user = User(None, user_ins["username"], user_ins["password"], user_ins["email"], False)
+        new_user.save()
+        session["username"] = user_ins["username"]
+        return new_user.to_json()
+    else:
+        return redirect(url_for("login_page"))
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -34,11 +56,11 @@ def login():
         return json.dumps({"Error Message":"Wrong username/password"})
 
 @app.route('/newsession', methods=['POST'])
+@login_required
 def new_session():
     if "username" in session:
         username = session["username"]
         cur_user = User.get_by_username(username)
-        print(cur_user.__dict__)
         if cur_user:
             session_json = json.loads(request.data)
             new_session = TaskSession(None, session_json['session_name'])
@@ -57,11 +79,13 @@ def login_page():
     #return str(os.path.join(basedir,'static'))
     return send_from_directory(os.path.join('.', 'static'), 'login.html')
 
+@login_required
 def logout():
     session.pop("username", None)
     return redirect(url_for("login_page"))
 
 @app.route('/sessions', methods=['GET'])
+@login_required
 def get_sessions():
     if "username" in session:
         session_list = []
@@ -74,11 +98,12 @@ def get_sessions():
                 session_list.append({'_id':cur_session._id,'name':cur_session.name})
         return json.dumps({
             'sessions': session_list
-        });
+        })
     else:
         return json.dumps({"Error Message":"Please login first"})
 
 @app.route('/session/<session_id>', methods=['GET'])
+@login_required
 def get_session(session_id):
     """
     if "username" in session:
@@ -125,23 +150,27 @@ def get_session(session_id):
 
 def db_update_task(task):
     if task["_id"] is not None:
-        task_dict = None
-        cfg_dict = None
-        task_db_id = task["_id"].replace("task","")
-        cur_task = Task.get_by_id(task_db_id)
-        if cur_task:
-            cur_task._name = task["_title"]
-            cur_task.detail = task["_text"]
-            cur_task.save()
-            task_dict = cur_task.to_dict()
-            cur_cfg = ConfigTask.get_by_task_id(task_db_id)
-            if cur_cfg:
-                cur_cfg.color_id = int(task["color_id"])
-                cur_cfg.save()
-                cfg_dict = cur_cfg.to_dict()
-            if task_dict is not None and cfg_dict is not None:
-                task_dict.update(cfg_dict)
-                return json.dumps(task_dict)
+        if "username" in session:
+            username = session["username"]
+            cur_user = User.get_by_username(username)
+            if cur_user and cur_user.is_authorized_for_task(task["_id"]):
+                task_dict = None
+                cfg_dict = None
+                task_db_id = task["_id"].replace("task","")
+                cur_task = Task.get_by_id(task_db_id)
+                if cur_task:
+                    cur_task._name = task["_title"]
+                    cur_task.detail = task["_text"]
+                    cur_task.save()
+                    task_dict = cur_task.to_dict()
+                    cur_cfg = ConfigTask.get_by_task_id(task_db_id)
+                    if cur_cfg:
+                        cur_cfg.color_id = int(task["color_id"])
+                        cur_cfg.save()
+                        cfg_dict = cur_cfg.to_dict()
+                    if task_dict is not None and cfg_dict is not None:
+                        task_dict.update(cfg_dict)
+                        return json.dumps(task_dict)
     else:
         cur_task = Task(None, task["session_id"], "Default value", "", 0)
         cur_task.save()
@@ -149,6 +178,7 @@ def db_update_task(task):
     return json.dumps({})
 
 @app.route('/task', methods=['POST'])
+@login_required
 def update_task():
     obj_ins = json.loads(request.data)
     res_obj = db_update_task(obj_ins)
@@ -157,6 +187,7 @@ def update_task():
     return session_response
 
 @app.route('/task', methods=['DELETE'])
+@login_required
 def delete_task():
     obj_ins = json.loads(request.data)
     Task.delete_by_id(obj_ins["_id"].replace("task",""))
@@ -165,6 +196,9 @@ def delete_task():
     return session_response
 
 def db_update_container(container):
+    #if "username" in session:
+    #    cur_user = User.get_by_username(session["username"])
+    #    session_ids = cur_user.get_my_sessions()
     if container["_id"] is not None:
         cur_container = TasksContainer.get_by_id(container["_id"])
         cur_container._name = container["_title"]
@@ -179,6 +213,7 @@ def db_update_container(container):
         return json.dumps({})
 
 @app.route('/container', methods=['POST'])
+@login_required
 def update_container():
     obj_ins = json.loads(request.data)
     res_obj = db_update_container(obj_ins)

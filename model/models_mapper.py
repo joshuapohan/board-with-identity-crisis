@@ -709,14 +709,14 @@ class UserMapper:
         pass
 
     @classmethod
-    def save_session(cls, session_id):
+    def save_session(cls, user, session_id):
         db_type = Config.get_db_type()
         if db_type == 0:
             pass
         elif db_type == 1:
-            cls.sqlite_save_session(session_id)
+            cls.sqlite_save_session(user, session_id)
         elif db_type == 2:
-            cls.postgres_save_session(session_id)
+            cls.postgres_save_session(user, session_id)
 
     @classmethod
     def get_user_for_session(cls, session_id):
@@ -737,6 +737,19 @@ class UserMapper:
             return cls.sqlite_get_all_sessions(username)
         elif db_type == 2:
             return cls.postgres_get_all_sessions(username)
+
+    @classmethod
+    def is_authorized_for_task(cls, user_id, task_id):
+        """
+            Check whether the user is associated to the task_id
+        """
+        db_type = Config.get_db_type()
+        if db_type == 0:
+            pass
+        elif db_type == 1:
+            pass
+        elif db_type == 2:
+            return cls.postgres_is_authorized_for_task(user_id, task_id)
 
     @classmethod
     def postgres_get_all_sessions(cls, user):
@@ -823,6 +836,29 @@ class UserMapper:
         connection.close()
 
         return user_row
+    
+    @classmethod
+    def postgres_is_authorized_for_task(cls, user_id, task_id):
+        connection = get_postgres_connection()
+        cursor = connection.cursor()
+        get_count_stmt = ' '.join((
+            "SELECT COUNT(t) FROM task AS t",
+            "INNER JOIN task_container_rel_task AS c_t",
+            "ON t.id = c_t.task_id",
+            "INNER JOIN task_container AS c",
+            "ON c_t.container_id = c.id",
+            "INNER JOIN task_session AS s",
+            "ON  c.session_id = s.id",
+            "INNER JOIN user_rel_session AS u_s",
+            "ON s.id = u_s.session_id",
+            "WHERE u_s.user_id=%s AND t.id=%s"
+        ))
+        cursor.execute(get_count_stmt, (user_id, task_id))     
+        task_count = cursor.fetchone()[0]
+
+        cursor.close()
+        connection.close()
+        return task_count > 0
 
     @classmethod
     def postgres_delete_by_id(cls, id):
@@ -845,7 +881,7 @@ class UserMapper:
         pass
 
     @classmethod
-    def sqlite_save_session(cls, session_id):
+    def sqlite_save_session(cls, user, session_id):
         pass
 
     @classmethod
@@ -936,7 +972,7 @@ class TaskSessionMapper():
         connection = get_postgres_connection()
         cursor = connection.cursor()
         select_container_stmt = "SELECT * FROM  task_session WHERE name=%s;"
-        cursor.execute(insert_container_stmt, (name,))
+        cursor.execute(select_container_stmt, (name,))
         session = cursor.fetchone()
         cursor.close()
         connection.close()

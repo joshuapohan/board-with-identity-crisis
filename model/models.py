@@ -76,7 +76,7 @@ class TasksContainer:
             id: id of the container to be deleted
 
         """
-        TasksContainerMapper.delete_by_id(self)
+        TasksContainerMapper.delete_by_id(_id)
 
     @classmethod
     def get_by_id(cls, _id):
@@ -336,7 +336,16 @@ class User():
 
     @classmethod
     def get_user_for_session(cls, session_id):
+        """
+            DEPRECATED
+        """
         UserMapper.get_user_for_session(session_id)
+
+    def is_authorized_for_task(self, task_id):
+        """
+            returns whether or not the user is authorized to modify the task
+        """
+        return UserMapper.is_authorized_for_task(self._id, task_id)
 
 class TaskSession():
 
