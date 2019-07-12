@@ -36,7 +36,7 @@ def index():
 @app.route('/register', methods=['POST'])
 def register():
     user_ins = json.loads(request.data)
-    is_name_taken = User.get_by_username is not None
+    is_name_taken = User.get_by_username(user_ins["username"]) is not None
     if not is_name_taken:
         new_user = User(None, user_ins["username"], user_ins["password"], user_ins["email"], False)
         new_user.save()
