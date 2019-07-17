@@ -79,6 +79,7 @@ def login_page():
     #return str(os.path.join(basedir,'static'))
     return send_from_directory(os.path.join('.', 'static'), 'login.html')
 
+@app.route('/logout',  methods=['GET'])
 @login_required
 def logout():
     session.pop("username", None)
