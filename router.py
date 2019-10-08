@@ -9,6 +9,7 @@ def set_cors_header(response):
     response.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS,PUT,DELETE"
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Headers"] = "*"
+    print(response.headers)
 
 def login_required(f):
     """
