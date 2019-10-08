@@ -151,7 +151,7 @@ class TasksBlock extends React.Component{
         /**
             function to send update to server using task id and container id
         */
-        let urlForBlockCommit = "https://bwic.herokuapp.com/container";
+        let urlForBlockCommit = "/container";
         fetch(urlForBlockCommit,
         {
             method: 'POST',
@@ -257,7 +257,7 @@ class Task extends React.Component{
         /**
             function to delete task by requesting to server and removing from the owner component
         */
-        let urlForTaskDelete = "https://bwic.herokuapp.com/task";
+        let urlForTaskDelete = "/task";
         fetch(urlForTaskDelete,
         {
             method: 'DELETE',
@@ -276,7 +276,7 @@ class Task extends React.Component{
         /**
             function to send update to server using task id and container id
         */
-        let urlForTaskCommit = "https://bwic.herokuapp.com/task";
+        let urlForTaskCommit = "/task";
         fetch(urlForTaskCommit,
         {
             method: 'POST',
@@ -378,7 +378,7 @@ class Board extends React.Component{
         this.removeTask = this.removeTask.bind(this);
         let selfInstance = this;
         //mode 2
-        fetch("https://bwic.herokuapp.com/session/" + this.session_id, {
+        fetch("/session/" + this.session_id, {
           method: 'GET'
         }).then((response)=>response.json())
         .then((retrievedBlocks)=> retrievedBlocks.forEach((curBlock)=>{
@@ -415,7 +415,7 @@ class Board extends React.Component{
         this.taskRefs = this.taskRefs.concat(instance);
     }
     addBlock(){
-        let dummyURLForNewBlockObject = "https://bwic.herokuapp.com/container"              
+        let dummyURLForNewBlockObject = "/container"              
         let blockObj = {
           _id: null,
           session_id: this.session_id || 0
@@ -442,7 +442,7 @@ class Board extends React.Component{
     }
     addTask(){
         
-        let dummyURLForNewTaskObject = "https://bwic.herokuapp.com/task"
+        let dummyURLForNewTaskObject = "/task"
         let taskObj = {
           _id: null,
           session_id: this.session_id || 0
