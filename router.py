@@ -18,12 +18,18 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if "username" in session:
+            #debug
+            print("User is logged in")
+            #debug
             cur_user = User.get_by_username(session["username"])
             if cur_user:
                 return f(*args, **kwargs)
             else:
                 return redirect(url_for("login_page"))
         else:
+            #debug
+            print("User is not logged in")
+            #debug
             return redirect(url_for("login_page"))
     return decorated_function
         
@@ -139,6 +145,9 @@ def get_session(session_id):
     """
     #return redirect(url_for("login_page"))
     #Retrieve the objects by session
+    #debug
+    print("Retrieving session")
+    #debug
     containers = TasksContainer.get_all_by_session(session_id)
     for cur_container in containers:
         for cur_task in cur_container.my_tasks:
